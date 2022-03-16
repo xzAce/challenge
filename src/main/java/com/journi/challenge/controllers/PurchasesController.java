@@ -20,7 +20,7 @@ public class PurchasesController {
     public PurchaseStats getStats() {
         return purchasesRepository.getLast30DaysStats();
     }
-
+    /** Added Currency code to every new Purchase**/
     @PostMapping("/purchases")
     public Purchase save(@RequestBody PurchaseRequest purchaseRequest) {
         Purchase newPurchase = new Purchase(
@@ -28,7 +28,8 @@ public class PurchasesController {
                 LocalDateTime.parse(purchaseRequest.getDateTime(), DateTimeFormatter.ISO_DATE_TIME),
                 purchaseRequest.getProductIds(),
                 purchaseRequest.getCustomerName(),
-                purchaseRequest.getAmount()
+                purchaseRequest.getAmount(),
+                purchaseRequest.getCurrencyCode()
         );
         purchasesRepository.save(newPurchase);
         return newPurchase;

@@ -6,6 +6,8 @@ import java.util.List;
  * Request for Purchase
  * amount is the value of the total purchase, in given currencyCode
  */
+/** Added currencyCode variable to PurchaseRequest**/
+
 public class PurchaseRequest {
 
     private final String invoiceNumber;

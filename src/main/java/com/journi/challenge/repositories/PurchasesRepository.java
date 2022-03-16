@@ -1,7 +1,9 @@
 package com.journi.challenge.repositories;
 
+import com.journi.challenge.CurrencyConverter;
 import com.journi.challenge.models.Purchase;
 import com.journi.challenge.models.PurchaseStats;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.time.*;
@@ -24,10 +26,25 @@ public class PurchasesRepository {
     }
 
     public void save(Purchase purchase) {
+        String currencyCode;
+        double price;
+        double convertedPrice;
+
+        currencyCode = purchase.getCurrencyCode();
+        price = purchase.getTotalValue();
+
+        if (!currencyCode.equalsIgnoreCase("EUR")) {
+            CurrencyConverter currencyConverter = new CurrencyConverter();
+            convertedPrice = currencyConverter.convertCurrencyToEur(currencyCode, price);
+            purchase.setCurrencyCode("EUR");
+            purchase.setTotalValue(convertedPrice);
+        }
+
         allPurchases.add(purchase);
     }
 
     public PurchaseStats getLast30DaysStats() {
+
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE.withZone(ZoneId.of("UTC"));
 
         LocalDateTime start = LocalDate.now().atStartOfDay().minusDays(30);
@@ -35,19 +52,22 @@ public class PurchasesRepository {
         List<Purchase> recentPurchases = allPurchases
                 .stream()
                 .filter(p -> p.getTimestamp().isAfter(start))
-                .sorted(Comparator.comparing(Purchase::getTimestamp))
+                /** Sort by total Value from Purchase instead of timedate**/
+                .sorted(Comparator.comparing(Purchase::getTotalValue))
                 .collect(Collectors.toList());
 
         long countPurchases = recentPurchases.size();
         double totalAmountPurchases = recentPurchases.stream().mapToDouble(Purchase::getTotalValue).sum();
         return new PurchaseStats(
-                formatter.format(recentPurchases.get(0).getTimestamp()),
-                formatter.format(recentPurchases.get(recentPurchases.size() - 1).getTimestamp()),
+                formatter.format(start),
+                formatter.format(LocalDate.now()),
                 countPurchases,
                 totalAmountPurchases,
                 totalAmountPurchases / countPurchases,
-                recentPurchases.stream().mapToDouble(Purchase::getTotalValue).min().orElse(0.0),
-                recentPurchases.stream().mapToDouble(Purchase::getTotalValue).min().orElse(0.0)
+                /**Obtaining Max and Min value directly through list index, instead of iterating list again**/
+                recentPurchases.get(0).getTotalValue(),
+                recentPurchases.get(recentPurchases.size()-1).getTotalValue()
+
         );
     }
 }

@@ -49,4 +49,9 @@ public class CurrencyConverter {
     public Double convertEurToCurrency(String currencyCode, Double eurValue) {
         return eurValue * currencyEurRate.getOrDefault(currencyCode, 1.0);
     }
+
+    /**Method to convert any given Currency to Eur**/
+    public Double convertCurrencyToEur(String currencyCode, Double value) {
+        return value / currencyEurRate.getOrDefault(currencyCode, 1.0);
+    }
 }

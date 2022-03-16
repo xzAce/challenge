@@ -5,16 +5,21 @@ package com.journi.challenge.models;
  * Id is of course unique.
  * price is always in Euros.
  */
+
+
+/** Added currencyCode variable to Product**/
 public class Product {
 
     private final String id;
     private final String description;
     private final Double price;
+    private final String currencyCode;
 
-    public Product(String id, String description, Double price) {
+    public Product(String id, String description, Double price, String currencyCode) {
         this.id = id;
         this.description = description;
         this.price = price;
+        this.currencyCode = currencyCode;
     }
 
     public String getId() {
@@ -29,4 +34,7 @@ public class Product {
         return price;
     }
 
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
 }

@@ -13,21 +13,27 @@ import java.util.List;
  * customerName name of the customer
  * totalValue total value of this purchase, in EUR
  */
+
+
+/** Added currencyCode variable to Purchase**/
 public class Purchase {
 
     private final String invoiceNumber;
     private final LocalDateTime timestamp;
     private final List<String> productIds;
     private final String customerName;
-    private final Double totalValue;
+    private Double totalValue;
+    private String currencyCode;
 
-    public Purchase(String invoiceNumber, LocalDateTime timestamp, List<String> productIds, String customerName, Double totalValue) {
+    public Purchase(String invoiceNumber, LocalDateTime timestamp, List<String> productIds, String customerName, Double totalValue, String currencyCode) {
         this.invoiceNumber = invoiceNumber;
         this.timestamp = timestamp;
         this.productIds = productIds;
         this.customerName = customerName;
         this.totalValue = totalValue;
+        this.currencyCode = currencyCode;
     }
+
 
     public String getInvoiceNumber() {
         return invoiceNumber;
@@ -48,4 +54,20 @@ public class Purchase {
     public Double getTotalValue() {
         return totalValue;
     }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setTotalValue(double value){
+
+        this.totalValue = value;
+    }
+
+    public void setCurrencyCode(String currencyCode){
+
+        this.currencyCode = currencyCode;
+    }
+
+
 }
